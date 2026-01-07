@@ -70,7 +70,7 @@ def _contains_relax(mod: Union[PrimFunc, IRModule]) -> bool:
 
 def compile(  # pylint: disable=redefined-builtin
     mod: Union[PrimFunc, IRModule],
-    target: Optional[Target] = None,
+    target: Optional[Union[str, Target]] = None,
     *,
     relax_pipeline: Optional[Union[tvm.transform.Pass, Callable, str]] = "default",
     tir_pipeline: Optional[Union[tvm.transform.Pass, Callable, str]] = "default",
@@ -86,7 +86,7 @@ def compile(  # pylint: disable=redefined-builtin
     mod : Union[PrimFunc, IRModule]
         The input module to be compiled. Can be a PrimFunc or an IRModule containing
         TIR or Relax functions.
-    target : Optional[Target]
+    target : Optional[Union[str, Target]]
         The target platform to compile for.
     relax_pipeline : Optional[Union[tvm.transform.Pass, Callable, str]]
         The compilation pipeline to use for Relax functions.

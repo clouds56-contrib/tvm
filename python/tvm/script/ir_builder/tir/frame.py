@@ -15,7 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 """IRBuilder for TIR"""
-from typing import List, Union
+from abc import ABC, abstractmethod
+from typing import Generic, Iterator, List, TypeVar, Union
 
 from tvm_ffi import register_object as _register_object
 from tvm.tir import Buffer, Var
@@ -43,11 +44,28 @@ class BlockInitFrame(TIRFrame):
     ...
 
 
+_FT = TypeVar("_FT", Var, List[Var])
+
+
+class ForFrameWithOp(ABC, Generic[_FT]):
+    @abstractmethod
+    def __iter__(self) -> Iterator[_FT]:
+        ...
+
+
 @_register_object("script.ir_builder.tir.ForFrame")
 class ForFrame(TIRFrame):
     def __enter__(self) -> Union[Var, List[Var]]:  # type: ignore[override]
         super().__enter__()
         return self.vars if len(self.vars) > 1 else self.vars[0]
+
+
+class ForFrameVar(ForFrame, ForFrameWithOp[Var]):
+    pass
+
+
+class ForFrameGrid(ForFrame, ForFrameWithOp[List[Var]]):
+    pass
 
 
 @_register_object("script.ir_builder.tir.AssertFrame")

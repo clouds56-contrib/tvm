@@ -738,7 +738,7 @@ def serial(
     *,
     annotations: Optional[Dict[str, Any]] = None,
     step: Optional[PrimIntExpr] = None,
-) -> frame.ForFrame:
+) -> frame.ForFrameVar:
     """The serial For statement.
 
     Parameters
@@ -775,7 +775,7 @@ def parallel(
     *,
     annotations: Optional[Dict[str, Any]] = None,
     step: Optional[PrimIntExpr] = None,
-) -> frame.ForFrame:
+) -> frame.ForFrameVar:
     """The parallel For statement.
 
     Parameters
@@ -812,7 +812,7 @@ def vectorized(
     *,
     annotations: Optional[Dict[str, Any]] = None,
     step: Optional[PrimIntExpr] = None,
-) -> frame.ForFrame:
+) -> frame.ForFrameVar:
     """The vectorized For statement.
 
     Parameters
@@ -849,7 +849,7 @@ def unroll(
     *,
     annotations: Optional[Dict[str, Any]] = None,
     step: Optional[PrimIntExpr] = None,
-) -> frame.ForFrame:
+) -> frame.ForFrameVar:
     """The unrolled For statement.
 
     Parameters
@@ -886,7 +886,7 @@ def thread_binding(
     thread: Optional[str] = None,
     *,
     annotations: Optional[Dict[str, Any]] = None,
-) -> frame.ForFrame:
+) -> frame.ForFrameVar:
     """The thread-binding For statement.
 
     Parameters
@@ -928,7 +928,14 @@ def thread_binding(
     )
 
 
-def grid(*extents: PrimIntExpr) -> frame.ForFrame:
+@overload
+def grid(extent: PrimIntExpr, /) -> frame.ForFrameVar:  # type: ignore[misc]
+    ...
+@overload
+def grid(*extents: PrimIntExpr) -> frame.ForFrameGrid:
+    ...
+
+def grid(*extents: PrimIntExpr) -> Union[frame.ForFrameVar, frame.ForFrameGrid]:
     """The grid For statement.
 
     Parameters
